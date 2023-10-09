@@ -1,22 +1,25 @@
-#include <iostream>
+ï»¿#include <iostream>
 #include <vector>
 #include <unordered_map>
 
 using namespace std;
 
-const int INF = 1e10; 
+const int INF = 1e10;
 
 class Graph {
 private:
     unordered_map<int, vector<pair<int, int>>> graph;
+    vector<vector<int>> S;
 
 public:
+
+
     void AddTop(int top) {
         if (graph.find(top) == graph.end()) {
             graph[top] = vector<pair<int, int>>();
         }
         else {
-            cout << "Òàêàÿ âåðøèíà óæå ñóùåñòâóåò!" << endl;
+            cout << "Ð¢Ð°ÐºÐ°Ñ Ð²ÐµÑ€ÑˆÐ¸Ð½Ð° ÑƒÐ¶Ðµ ÑÑƒÑ‰ÐµÑÑ‚Ð²ÑƒÐµÑ‚!" << endl;
         }
     }
 
@@ -25,7 +28,7 @@ public:
             graph[from].push_back(make_pair(to, weight));
         }
         else {
-            cout << "Îäíîé(èëè äâóõ âåðøèí) èç óêàçàííûõ íå ñóùåñòâóåò" << endl;
+            cout << "ÐžÐ´Ð½Ð¾Ð¹(Ð¸Ð»Ð¸ Ð´Ð²ÑƒÑ… Ð²ÐµÑ€ÑˆÐ¸Ð½) Ð¸Ð· ÑƒÐºÐ°Ð·Ð°Ð½Ð½Ñ‹Ñ… Ð½Ðµ ÑÑƒÑ‰ÐµÑÑ‚Ð²ÑƒÐµÑ‚" << endl;
         }
     }
 
@@ -34,40 +37,59 @@ public:
         const int SIZE = graph.size();
 
         vector<vector<int>> D(SIZE, vector<int>(SIZE, INF));
+        S.resize(SIZE, vector<int>(SIZE, -1));
+
         for (int i = 0; i < SIZE; ++i) {
             D[i][i] = 0;
             for (auto edge : graph[i + 1]) {
                 int v = edge.first;
                 int weight = edge.second;
                 D[i][v - 1] = weight;
+                S[i][v - 1] = v;
             }
         }
 
-      
         for (int k = 0; k < SIZE; ++k) {
             for (int i = 0; i < SIZE; ++i) {
                 for (int j = 0; j < SIZE; ++j) {
-                    D[i][j] = min(D[i][j], D[i][k] + D[k][j]);
+                    if (D[i][k] + D[k][j] < D[i][j]) {
+                        D[i][j] = D[i][k] + D[k][j];
+                        S[i][j] = S[k][j];
+                    }
                 }
             }
         }
 
-        
+        cout << "D = " << endl;
         for (int i = 0; i < SIZE; ++i) {
             cout << '\t';
             for (int j = 0; j < SIZE; ++j) {
                 if (D[i][j] == INF) {
-                    cout << "INF ";
+                    cout << "0 ";
                 }
                 else {
-                    cout <<D[i][j] << " ";
+                    cout << D[i][j] << " ";
+                }
+            }
+            cout << endl;
+        }
+
+        cout << "S = " << endl;
+        for (int i = 0; i < SIZE; ++i) {
+            cout << '\t';
+            for (int j = 0; j < SIZE; ++j) {
+                if (S[i][j] == -1) {
+                    cout << "0 ";
+                }
+                else {
+                    cout << S[i][j] << " ";
                 }
             }
             cout << endl;
         }
 
         graph = originalGraph;
-    }
+    };
 };
 
 int main() {
@@ -111,8 +133,6 @@ int main() {
     graph.AddEdge(6, 2, 18);
     graph.AddEdge(6, 5, 6);
 
-    cout << "D = ";
     graph.FloydWarshall();
-
     return 0;
 }

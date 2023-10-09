@@ -101,7 +101,7 @@ int main() {
     Graph graph(adjacencyMatrix);
 
     int startVertex = 0;
-    int endVertex = 2;
+    int endVertex = 1;
 
     vector<int> dfsPath = graph.dfs(startVertex, endVertex);
     if (!dfsPath.empty()) {

@@ -9,19 +9,19 @@ const int INF = 1e10;
 
 class Graph {
 private:
-    unordered_map<int, vector<pair<int, int>>> graph;
+    unordered_map<char, vector<pair<char, int>>> graph;
 
 public:
-    void AddTop(int top) {
+    void AddTop(char top) {
         if (graph.find(top) == graph.end()) {
-            graph[top] = vector<pair<int, int>>();
+            graph[top] = vector<pair<char, int>>();
         }
         else {
             cout << "Такая вершина уже существует!" << endl;
         }
     }
 
-    void AddEdge(int from, int to, int weight) {
+    void AddEdge(char from, char to, int weight) {
         if (graph.find(from) != graph.end() && graph.find(to) != graph.end()) {
             graph[from].push_back(make_pair(to, weight));
         }
@@ -30,12 +30,12 @@ public:
         }
     }
 
-    void Dijkstra(int source) {
-        unordered_map<int, int> distance;
-        set<pair<int, int>> s;
+    void Dijkstra(char source) {
+        unordered_map<char, int> distance;
+        set<pair<int, char>> s;
 
         for (auto p : graph) {
-            int vertex = p.first;
+            char vertex = p.first;
             distance[vertex] = INF;
         }
 
@@ -43,11 +43,11 @@ public:
         s.insert({ 0, source });
 
         while (!s.empty()) {
-            int current_vertex = s.begin()->second;
+            char current_vertex = s.begin()->second;
             s.erase(s.begin());
 
             for (auto& edge : graph[current_vertex]) {
-                int neighbor = edge.first;
+                char neighbor = edge.first;
                 int weight = edge.second;
 
                 if (distance[current_vertex] + weight < distance[neighbor]) {
@@ -70,52 +70,57 @@ public:
         }
     }
 
-
 };
 
 int main() {
     setlocale(LC_ALL, "rus");
     Graph graph;
 
-    graph.AddTop(1);
-    graph.AddTop(2);
-    graph.AddTop(3);
-    graph.AddTop(4);
-    graph.AddTop(5);
-    graph.AddTop(6);
+    graph.AddTop('A');
+    graph.AddTop('B');
+    graph.AddTop('C');
+    graph.AddTop('D');
+    graph.AddTop('E');
+    graph.AddTop('F');
+    graph.AddTop('G');
+    graph.AddTop('H');
+    graph.AddTop('I');
 
-
-    graph.AddEdge(1, 2, 28);
-    graph.AddEdge(1, 3, 21);
-    graph.AddEdge(1, 5, 12);
-    graph.AddEdge(1, 4, 59);
-    graph.AddEdge(1, 6, 27);
-
-    graph.AddEdge(2, 1, 7);
-    graph.AddEdge(2, 3, 24);
-    graph.AddEdge(2, 6, 9);
-    graph.AddEdge(2, 5, 21);
-
-    graph.AddEdge(3, 1, 9);
-    graph.AddEdge(3, 2, 32);
-    graph.AddEdge(3, 5, 11);
-    graph.AddEdge(3, 4, 13);
-
-    graph.AddEdge(4, 1, 8);
-    graph.AddEdge(4, 3, 5);
-    graph.AddEdge(4, 5, 16);
-
-    graph.AddEdge(5, 1, 14);
-    graph.AddEdge(5, 2, 13);
-    graph.AddEdge(5, 3, 15);
-    graph.AddEdge(5, 4, 10);
-    graph.AddEdge(5, 6, 22);
-
-    graph.AddEdge(6, 1, 15);
-    graph.AddEdge(6, 2, 18);
-    graph.AddEdge(6, 5, 6);
+    graph.AddEdge('A', 'B', 7);
+    graph.AddEdge('A', 'C', 10);
     
-    int vert;
+    graph.AddEdge('B', 'A', 7);
+    graph.AddEdge('B', 'G', 27);
+    graph.AddEdge('B', 'F', 9);
+    
+    graph.AddEdge('C', 'A', 10);
+    graph.AddEdge('C', 'F', 8);
+    graph.AddEdge('C', 'E', 31);
+
+    graph.AddEdge('D', 'E', 32);
+    graph.AddEdge('D', 'H', 17);
+    graph.AddEdge('D', 'I', 21);
+
+    graph.AddEdge('E', 'C', 31);
+    graph.AddEdge('E', 'D', 32);
+
+    graph.AddEdge('F', 'H', 11);
+    graph.AddEdge('F', 'C', 8);
+    graph.AddEdge('F', 'B', 9);
+
+    graph.AddEdge('G', 'B', 27);
+    graph.AddEdge('G', 'I', 15);
+
+    graph.AddEdge('H', 'F', 11);
+    graph.AddEdge('H', 'D', 17);
+    graph.AddEdge('H', 'I', 15);
+
+    graph.AddEdge('I', 'H', 15);
+    graph.AddEdge('I', 'G', 15);
+    graph.AddEdge('I', 'D', 21);
+
+    
+    char vert;
     cout << "От какой вершины ищем кратчайшие пути? ";
     cin >> vert;
     graph.Dijkstra(vert);
